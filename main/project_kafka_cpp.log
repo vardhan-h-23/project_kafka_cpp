@@ -1,0 +1,15 @@
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:12 [TID: 140598274663360] ActorMaster::Init called
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:18 [TID: 140598274663360] ActorMaster::Start called
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:30 [TID: 140598268917440] ActorMaster::LaunchOrder called for order_id: 3802673719
+[DEBUG] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:32 [TID: 140598268917440] Not in worker thread, posting LaunchOrder task for order_id: 3802673719
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:30 [TID: 140598260524736] ActorMaster::LaunchOrder called for order_id: 3802673719
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:38 [TID: 140598260524736] Created WorkerThread for order_id: 3802673719
+[INFO] /home/Harsh/git_source/project_kafka_cpp/order/order.cpp:16 [TID: 140598260524736] Order launched with order_id: 3802673719
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:24 [TID: 140598274663360] ActorMaster::Stop called
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:12 [TID: 140130564568000] ActorMaster::Init called
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:18 [TID: 140130564568000] ActorMaster::Start called
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:30 [TID: 140130549495488] ActorMaster::LaunchOrder called for order_id: 1243738605
+[DEBUG] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:32 [TID: 140130549495488] Not in worker thread, posting LaunchOrder task for order_id: 1243738605
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:30 [TID: 140130541102784] ActorMaster::LaunchOrder called for order_id: 1243738605
+[INFO] /home/Harsh/git_source/project_kafka_cpp/actor/actor_master.cpp:38 [TID: 140130541102784] Created WorkerThread for order_id: 1243738605
+[INFO] /home/Harsh/git_source/project_kafka_cpp/order/order.cpp:17 [TID: 140130541102784] Order launched with order_id: 1243738605
