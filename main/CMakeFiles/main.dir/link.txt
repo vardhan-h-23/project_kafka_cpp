@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/main.dir/main.cpp.o -o main  -Wl,-rpath,/usr/local/lib ../consumer/libconsumer.a ../controller/libcontroller.a ../thread/libthreadlib.a /usr/local/lib/libcppkafka.so.0.4.1 /usr/lib/x86_64-linux-gnu/librdkafka.so -lpthread -lrt -lssl -lcrypto -ldl -lz ../actor/libactor.a ../order/liborder.a 

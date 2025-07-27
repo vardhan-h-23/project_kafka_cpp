@@ -1,2 +1,0 @@
-/usr/bin/ar qc libconsumer.a CMakeFiles/consumer.dir/consumer.cpp.o
-/usr/bin/ranlib libconsumer.a
