@@ -1,0 +1,10 @@
+Consumer (info)
+|
+Controller -> order (task_scheduler (construct), order_actor(null)) ->launch-> actor_master -> (order_actor->order) (order_actor-> task_scheduler) -> 
+
+order
+
+order_actor -> (List, thread) -> 
+
+task_scheduler (<time, func_ptr> thread work kr rha hai, -> order_actor->push(func_ptr push) )
+
