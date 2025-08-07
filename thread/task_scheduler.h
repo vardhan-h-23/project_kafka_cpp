@@ -10,6 +10,7 @@
 #include <thread>
 #include <memory>
 #include "../thread/worker_thread.h"
+#include <iostream>
 
 class TaskScheduler
 {
@@ -35,10 +36,14 @@ class TaskScheduler
         
         void working_loop()
         {
+            worker_thread_id_ = std::this_thread::get_id();
+            bool check= true;
             while (running.load(std::memory_order_seq_cst))
             {
                 std::unique_lock<std::mutex> lock(queue_mutex);
-                
+                if (check){
+                    check = false;
+                }
                 if (task_queue.empty()){
                     //
                     cv.wait(lock,[this]{ return !task_queue.empty() || !running; });
@@ -48,14 +53,15 @@ class TaskScheduler
                 std::chrono::steady_clock::time_point now(std::chrono::steady_clock::now());
                 Task tsk = task_queue.top();
                 if (tsk.when <= now){
-                    //
                     task_queue.pop();
-
                     try{
                         order_actor->PostTask(tsk.func);
                     }
                     catch (const std::exception& ex){
-
+                        std::cerr << "Exception in TaskScheduler: " << ex.what() << std::endl;
+                    }
+                    catch (...){
+                        std::cerr << "Unknown exception in TaskScheduler." << std::endl;
                     }
                 }
                 else {
@@ -65,7 +71,9 @@ class TaskScheduler
         }
 
     public:
-        TaskScheduler() : worker_thread_(&TaskScheduler::working_loop, this) {}
+        TaskScheduler() : worker_thread_(&TaskScheduler::working_loop, this)
+        {
+        }
         ~TaskScheduler() 
         {
             Stop();
@@ -89,25 +97,32 @@ class TaskScheduler
         void Schedule_at(std::chrono::steady_clock::time_point when, std::function<void()> func) 
         {
             {
-                std::lock_guard<std::mutex> lock(queue_mutex);
+                std::unique_lock<std::mutex> lock(queue_mutex);
                 task_queue.push(Task{when, func});
             }
             cv.notify_one();
         }
 
-        template<typename Rep, typename Period>
-        void Schedule_after(std::chrono::duration<Rep, Period> delay, std::function<void()> func) 
+        // template<typename Rep, typename Period>
+        void Schedule_after(std::chrono::seconds delay, std::function<void()> func) 
         {
             auto when = std::chrono::steady_clock::now() + delay;
             Schedule_at(when, func);
         }
 
-        void schedule_at_system_time(std::chrono::system_clock::time_point when, std::function<void()> func) 
+        void Schedule_At_System_Time(std::chrono::system_clock::time_point when, std::function<void()> func) 
         {
             std::chrono::steady_clock::time_point now_steady = std::chrono::steady_clock::now();
             std::chrono::system_clock::time_point now_system = std::chrono::system_clock::now();
             auto when_steady = now_steady + (when - now_system);
             Schedule_at(when_steady, func);
         }
+
+        void TriggerCancel()
+        {
+            task_queue = std::priority_queue<Task, std::vector<Task>, std::greater<Task>>{};
+            Stop();
+        }
+        std::thread::id worker_thread_id_;
 };
 #endif // TASK_SCHEDULER_H

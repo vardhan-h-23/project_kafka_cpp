@@ -14,7 +14,8 @@ Consumer::~Consumer() {
     Stop();
 }
 
-void Consumer::Init(const std::string& topic) {
+void Consumer::Init(const std::string& topic)
+{
     topic_ = topic;
     cppkafka::Configuration config = {
         {"metadata.broker.list", brokers_},
@@ -25,7 +26,8 @@ void Consumer::Init(const std::string& topic) {
     consumer_->subscribe({topic_});
 }
 
-bool Consumer::Start(std::function<void(OrderMessage&)> on_message) {
+bool Consumer::Start(std::function<void(OrderMessage&)> on_message) 
+{
     if (running_) return false;
     if (!consumer_) return false;
     running_ = true;
@@ -56,7 +58,8 @@ bool Consumer::Start(std::function<void(OrderMessage&)> on_message) {
     return true;
 }
 
-bool Consumer::Stop() {
+bool Consumer::Stop()
+{
     if (!running_) return false;
     running_ = false;
     if (consumer_thread_.joinable()) consumer_thread_.join();

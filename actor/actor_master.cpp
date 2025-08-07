@@ -15,7 +15,7 @@ void ActorMaster::Init()
 bool ActorMaster::Start()
 {
     LOG(INFO, "ActorMaster::Start called");
-    return wrk_thread.Start(); 
+    return true; 
 }
 
 bool ActorMaster::Stop()
@@ -24,16 +24,16 @@ bool ActorMaster::Stop()
     return wrk_thread.Stop(); 
 }
 
-bool ActorMaster::LaunchOrder(Order &new_order)
+bool ActorMaster::LaunchOrder(std::shared_ptr<Order> new_order)
 {
     if (!wrk_thread.IsSame(std::this_thread::get_id())){
-        wrk_thread.PostTask([this, &new_order]() { this->LaunchOrder(new_order); });
+        wrk_thread.PostTask([this, new_order]() { this->LaunchOrder(new_order); });
         return true;
     }
-    std::shared_ptr<WorkerThread> order_actor = std::make_shared<WorkerThread>();
-    order_id_to_order_actor[new_order.omsg_.order_id] = order_actor;
-    LOG(INFO, "Created WorkerThread for order_id: " << new_order.omsg_.order_id);
-    new_order.Launch(order_actor);
+    std::shared_ptr<WorkerThread> order_actor= std::make_shared<WorkerThread>("Order_Actor");
+    order_id_to_order_actor[new_order->omsg_.order_id] = order_actor;
+    LOG(INFO, "Created WorkerThread for order_id: " << new_order->omsg_.order_id);
+    new_order->Launch(order_actor);
     return true;
 }
 

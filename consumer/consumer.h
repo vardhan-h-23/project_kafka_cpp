@@ -12,7 +12,8 @@ namespace cppkafka {
     class Consumer;
 }
 
-class Consumer {
+class Consumer
+{
    public:
     Consumer(const std::string& brokers);
     ~Consumer();

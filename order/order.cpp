@@ -4,6 +4,7 @@
 #include "../utils/message_types.h"
 #include "../utils/logger.h"
 #include <iomanip>
+
 Order::Order(OrderMessage &omsg){
     omsg_ = omsg;
 }
@@ -11,10 +12,19 @@ Order::Order(OrderMessage &omsg){
 bool Order::Launch(const std::shared_ptr<WorkerThread> &actor)
 {
     order_actor = actor;
-    task_scheduler.Start(order_actor);
-    order_actor->Start();
+    task_scheduler.Start(actor);
     order_actor->PostTask(std::bind(&Order::Start, this));
     LOG(INFO, "Order launched with order_id: " << omsg_.order_id);
+    return true;
+}
+
+bool Order::Stop()
+{
+    task_scheduler.Stop();
+    if (order_actor) {
+        order_actor->Stop();
+        order_actor = nullptr;
+    }
     return true;
 }
 
@@ -37,7 +47,11 @@ void Order::Print()
     omsg_.reps--;
     if (omsg_.reps>0)
     {
-        task_scheduler.Schedule_after(std::chrono::duration<int64_t, std::micro> (omsg_.time_prd*1000),[=] {Order::Print();});
+        task_scheduler.Schedule_after(std::chrono::seconds (omsg_.time_prd),[=] {Order::Print();});
+    }
+    if (omsg_.reps == 0) {
+        Plog("Order completed with order_id: " + std::to_string(omsg_.order_id));
+        order_actor->PostTask([=] {Stop();});
     }
     
 }
@@ -52,5 +66,6 @@ void Order::Plog(const std::string& msg) {
 
 bool Order::Cancel(){
     // Logic to cancel the order
+    task_scheduler.TriggerCancel();
     return true; // Assuming cancellation is successful
 }

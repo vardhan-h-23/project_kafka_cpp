@@ -7,10 +7,11 @@ class Order {
         Order(OrderMessage &omsg);
         bool Launch(const std::shared_ptr<WorkerThread> &actor);
         bool Start();
+        bool Stop();
         bool Cancel();
         OrderMessage omsg_;
     private:
-        std::shared_ptr<WorkerThread> order_actor;
+        std::shared_ptr<WorkerThread> order_actor=nullptr;
         TaskScheduler task_scheduler; // Assuming TaskScheduler is defined elsewhere
         void Print();
         void Plog(const std::string &msg);
